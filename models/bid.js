@@ -13,6 +13,6 @@ const bidSchema = new Schema({
   amount: {
     type: Number
   }
-})
+}, {timestamps: true});
 
 module.exports = mongoose.model('Bid', bidSchema);
