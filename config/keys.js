@@ -1,5 +1,5 @@
 module.exports = {
-    // mongoURI: "mongodb+srv://inceptio:<password>@cluster0-dkoqx.mongodb.net/test?retryWrites=true&w=majority"
-    mongoURI: "mongodb://localhost/inceptio",
+    mongoURI: "DB_URL=mongodb://crowdfunding-app:crowdfunding123@ds263108.mlab.com:63108/inceptio-crowdfunding",
+    // mongoURI: "mongodb://localhost/inceptio",
     secretOrKey: "secret"
 };
