@@ -43,6 +43,13 @@ require("./config/passport")(passport);
 // Routes
 app.use("/api/users", users);
 app.use("/api/projects", project);
+app.use((error, req, res, next) => {
+  console.log(error);
+  const status = error.statusCode || 500;
+  const message = error.message;
+  const data  = error.data;
+  return res.status(status).json({ msg: message, data: data});
+});
 
 const port = process.env.PORT || 5000;
 
