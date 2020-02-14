@@ -5,7 +5,7 @@ const Project = require("../../models/project");
 
 const validateProjectInput = require("../../validation/project");
 
-router.post("/project", (req, res) => {
+router.post("/new", (req, res) => {
 
     // Form validation
     const { errors, isValid } = validateProjectInput(req.body);
@@ -35,27 +35,22 @@ router.post("/project", (req, res) => {
     
 });
 
-router.get("/allProjects", (req, res) => {
-    Project.find({}, (err, projects) => {
-        if(err) {
-            res.status(400).json("Something went wrong");
-            next();
-        }
-        res.json(projects);
-    });
+router.get("/fetch-all", async (req, res) => {
+    const projects = await Project.find();
+    console.log(projects);
+    res.status(200).json({projects});
 });
 
-router.get("/project/:id", (req, res) => {
-    Project.findById(req.params.id).then(
-        doc=> {
-            if(!doc) {
-                return res.status(404).json({id: "Id Not found"});
-            }
-            return res.status(200).json(doc);
-        }).catch(err => res.status(400).json(err));
+router.get("/:id", async (req, res, next) => {
+    try {
+        const project = await Project.findById(req.params.id);
+        console.log(project);
+        if(!project) throw new Error("Project Not Found!")
+        res.status(200).json({project});
+    } catch (error) {
+        next(error);
+    }
 });
-
-
 
 
 module.exports = router;

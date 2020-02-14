@@ -2,19 +2,25 @@ const express = require("express");
 const router = express.Router();
 
 const Project = require("../../models/project");
-const User = require("../../models/User");
+const User = require("../../models/user");
 const Bid = require("../../models/bid");
 
-router.post("/bid", async (req, res) => {
+const isAuthenticated = require("../../middlewares/isAuth");
+
+router.post("/:projectId", isAuthenticated, async (req, res, next) => {
   try {
     const {userId} = req;
     const {projectId} = req.params;
     const {amount} = req.body;
-    const user = User.findById(userId).select('balance');
+    const user = await User.findById(userId);
+    if(!user){
+      return res.status(400).json({msg: "No such user exists!"});      
+    }
     if(user.balance < amount){
       return res.status(400).json({msg: "Insufficient Funds!"});
     }
     user.balance -= amount;
+    console.log({user});
     await user.save();
     const bid = await Bid.create({
       project: projectId,
@@ -31,3 +37,5 @@ router.post("/bid", async (req, res) => {
     next(error);
   }
 });
+
+module.exports = router;

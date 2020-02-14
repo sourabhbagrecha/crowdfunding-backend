@@ -14,8 +14,7 @@ const projectSchema = new Schema({
     required: true
   },
   picture: {
-    type: String,
-    required: true
+    type: String
   },
   funds: {
     type: Number,

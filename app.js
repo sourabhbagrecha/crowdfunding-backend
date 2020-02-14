@@ -14,10 +14,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const passport = require("passport");
 
-const users = require("./routes/api/users");
-const project = require("./routes/api/project");
+const userRoutes = require("./routes/api/user");
+const projectRoutes = require("./routes/api/project");
+const biddingRoutes = require("./routes/api/bid");
 
 const app = express();
 
@@ -34,15 +34,19 @@ const db = require("./config/keys").mongoURI;
 
 mongoose.connect(db, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => console.log("MongoDB successfully connected")).catch(err => console.log(err));
 
-// Passport middleware
-app.use(passport.initialize());
 
-// Passport config
-require("./config/passport")(passport);
+//setting cors policies
+app.use((req, res, next) =>{
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, PUT, PATCH, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
 // Routes
-app.use("/api/users", users);
-app.use("/api/projects", project);
+app.use("/api/user", userRoutes);
+app.use("/api/project", projectRoutes);
+app.use("/api/bid", biddingRoutes);
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
