@@ -4,53 +4,14 @@ const router = express.Router();
 const Project = require("../../models/project");
 
 const validateProjectInput = require("../../validation/project");
+const projectController = require("../../controllers/project");
+const isAuth = require("../../middlewares/isAuth");
 
-router.post("/new", (req, res) => {
+router.post("/new", isAuth, projectController.addNewProject);
 
-    // Form validation
-    const { errors, isValid } = validateProjectInput(req.body);
+router.get("/fetch-all", isAuth, projectController.fetchAll);
 
-    // Check Validation
-    if (!isValid) {
-        return res.status(400).json(errors);
-    }
-    
-    // Add the project
-
-    Project.findOne({ title: req.body.title}).then(project => {
-        if (project) {
-            return res.status(400).json( { title: "Project Title exists" });
-        } else {
-            const newProject = new Project ({
-                title: req.body.title,
-                brief: req.body.brief,
-                description: req.body.description,
-                picture: req.body.picture
-            });
-
-            newProject.save().then(project => res.json(project)).catch(err => console.log(err));
-        }
-    });
-
-    
-});
-
-router.get("/fetch-all", async (req, res) => {
-    const projects = await Project.find();
-    console.log(projects);
-    res.status(200).json({projects});
-});
-
-router.get("/:id", async (req, res, next) => {
-    try {
-        const project = await Project.findById(req.params.id);
-        console.log(project);
-        if(!project) throw new Error("Project Not Found!")
-        res.status(200).json({project});
-    } catch (error) {
-        next(error);
-    }
-});
+router.get("/:id", isAuth, projectController.getProject);
 
 
 module.exports = router;
