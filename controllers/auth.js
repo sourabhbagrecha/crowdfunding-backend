@@ -38,50 +38,47 @@ const register = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-    
-  // Form Validation
-  const { errors, isValid } = validateLoginInput(req.body);
-
-  if (!isValid) {
-      return res.status(400).json(errors);
-  }
-
-  const {uid, password} = req.body;
-
-  // Find the user by uid
-  User.findOne({ uid }).then(user => {
-      // Check if the user exists
-      if (!user) {
-          return res.status(404).json({ uidnotfound: "UID not found" });
-      }
-
-      // Check the hashed password
-      bcrypt.compare(password, user.password).then(isMatch => {
-          if (isMatch) {
-              // User matched
-              // Create JWT Payload
-              const payload = {
-              userId: user.id,
-              name: user.name
-          };
-          jwt.sign(
-              payload, keys.secretOrKey, {
-                  expiresIn: 31556926 
-              },
-              (err, token) => {
-                  res.json({
-                      success: true,
-                      token: "Bearer " + token,
-                      user
-                  });
-              }
-          );
-          } else {
-              return res.status(400).json({ passwordincorrect: "Password incorrect" });
-          }
-      });
-  });
-
+	try {
+		// Form Validation
+		const { errors, isValid } = validateLoginInput(req.body);
+		const {uid, password} = req.body;
+	
+		// Find the user by uid
+		User.findOne({ uid }).then(user => {
+				// Check if the user exists
+				if (!user) {
+						return res.status(404).json({ msg: "No such user exists!" });
+				}
+	
+				// Check the hashed password
+				bcrypt.compare(password, user.password).then(isMatch => {
+						if (isMatch) {
+								// User matched
+								// Create JWT Payload
+								const payload = {
+								userId: user.id,
+								name: user.name
+						};
+						jwt.sign(
+								payload, keys.secretOrKey, {
+										expiresIn: 31556926 
+								},
+								(err, token) => {
+										res.json({
+												success: true,
+												token: "Bearer " + token,
+												user
+										});
+								}
+						);
+						} else {
+								return res.status(400).json({ passwordincorrect: "Password incorrect" });
+						}
+				});
+		});
+	} catch (error) {
+		next(error);
+	}
 }
 
 module.exports = {register, login};

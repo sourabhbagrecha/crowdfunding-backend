@@ -10,12 +10,12 @@ module.exports = function validateLoginInput(data) {
 
     // Email checks
     if (Validator.isEmpty(data.uid)) {
-        errors.uid = "UID field is required";
+        throw new Error("User id is required!")
     } 
 
     // Password checks
     if (Validator.isEmpty(data.password)) {
-        errors.password = "Password field is required";
+        throw new Error("Password field is required")
     }
     return {
         errors,
