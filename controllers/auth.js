@@ -17,7 +17,7 @@ const register = async (req, res, next) => {
 
   User.findOne({ uid: req.body.uid}).then(user => {
       if (user) {
-          return res.status(400).json({ uid: "UID already exists" });
+          return res.status(400).json({ msg: "UID already exists" });
       } else {
           const newUser = new User({
               name: req.body.name,
@@ -72,7 +72,7 @@ const login = async (req, res, next) => {
 								}
 						);
 						} else {
-								return res.status(400).json({ passwordincorrect: "Password incorrect" });
+								return res.status(400).json({ msg: "Sorry you can not hack Inceptio! Incorrect Password!" });
 						}
 				});
 		});
