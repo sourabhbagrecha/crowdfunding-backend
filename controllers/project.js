@@ -25,7 +25,7 @@ const addNewProject = async (req, res) => {
 
 const fetchAll = async (req, res, next) => {
   try {
-    const projects = await Project.find();
+    const projects = await Project.find().select("title brief picture");
     return res.status(200).json({projects});
   } catch (error) {
     next(error);
@@ -34,7 +34,7 @@ const fetchAll = async (req, res, next) => {
 
 const getProject = async (req, res, next) => {
   try {
-    const project = await Project.findById(req.params.id);
+    const project = await Project.findById(req.params.id).select("title brief picture description");
     if(!project) throw new Error("Project Not Found!")
     res.status(200).json({project});
   } catch (error) {

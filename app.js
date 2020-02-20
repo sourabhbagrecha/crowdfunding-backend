@@ -18,6 +18,7 @@ const bodyParser = require("body-parser");
 const userRoutes = require("./routes/api/user");
 const projectRoutes = require("./routes/api/project");
 const biddingRoutes = require("./routes/api/bid");
+const emailRoutes = require("./routes/util/emailer");
 
 const app = express();
 
@@ -47,6 +48,8 @@ app.use((req, res, next) =>{
 app.use("/api/user", userRoutes);
 app.use("/api/project", projectRoutes);
 app.use("/api/bid", biddingRoutes);
+app.use("/util/email", emailRoutes);
+
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;

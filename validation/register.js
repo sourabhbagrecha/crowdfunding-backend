@@ -16,11 +16,6 @@ module.exports = function validateRegisterInput(data) {
         errors.name = "Name field is required";
     }
     
-    // UID checks
-    if (Validator.isEmpty(data.uid)) {
-        errors.uid = "UID field is required";
-    } 
-    
     // Password checks
     if (Validator.isEmpty(data.password)) {
         errors.password = "Password field is required";

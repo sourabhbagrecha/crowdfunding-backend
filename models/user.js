@@ -7,8 +7,7 @@ const userSchema = new Schema({
     required: true
   },
   uid: {
-    type: String,
-    required: true
+    type: String
   },
   password: {
     type: String,
@@ -17,6 +16,14 @@ const userSchema = new Schema({
   balance: {
     type: Number,
     default: 100000 
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  otp: {
+    token: Number,
+    expiresIn: Date
   }
 })
 
