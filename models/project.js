@@ -24,6 +24,6 @@ const projectSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Bid'
   }]
-}, {timestamps: true})
+}, {timestamps: true});
 
 module.exports = Project = mongoose.model('Project', projectSchema);
