@@ -11,7 +11,8 @@ router.post("/new", isAuth, projectController.addNewProject);
 
 router.get("/fetch-all", isAuth, projectController.fetchAll);
 
-router.get("/:id", isAuth, projectController.getProject);
+router.post("/add-dummy-data", projectController.addDummyData);
 
+router.get("/:id", isAuth, projectController.getProject);
 
 module.exports = router;

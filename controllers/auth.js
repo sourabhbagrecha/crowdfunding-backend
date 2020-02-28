@@ -10,19 +10,39 @@ const emailer = require('./util/emailer');
 
 const register = async (req, res, next) => {
 	try {
-		const {email, password, name} = req.body;
-		// Form validation
-		const { errors, isValid } = validateRegisterInput(req.body);
-		// Check Validation
-		if (!isValid) {
-				return  res.status(400).json(errors);
+		const {email, name} = req.body;
+		if (!name) {
+			return  res.status(400).json({msg: "Name is required!"});
+		}
+		if(!email){
+			return res.status(400).json({msg: "Email Id is required!"})
 		}
 		const user = await User.findOne({ email })
 		if (user) return res.status(400).json({ msg: "Email already exists" });
+		const newUser = await User.create({
+			name,
+			email, 
+			balance: 100000
+		});
+		return res.status(200).json(newUser);
+	} catch (error) {
+		next(error);
+	}
+};
+
+const registerPanelist = async (req, res, next) => {
+	try {
+		const {password, name, uid} = req.body;
+		if(!password) return res.status(400).json({msg: "Password is required for panelist!"});
+		if(!name) return res.status(400).json({msg: "Name is required!"});
+		if(!uid) return res.status(400).json({msg: "Id is required!"});
+		const user = await User.findOne({ uid })
+		if (user) return res.status(400).json({ msg: "Uid already exists" });
 		const newUser = new User({
+			uid,
 			name,
 			password,
-			email
+			balance: 2500000
 		});
 		// Hash the password
 		bcrypt.genSalt(10, (err, salt) => {
@@ -36,14 +56,11 @@ const register = async (req, res, next) => {
 	} catch (error) {
 		next(error);
 	}
-};
+}
 
 const login = async (req, res, next) => {
 	try {
-		// Form Validation
-		const { errors, isValid } = validateLoginInput(req.body);
 		const {uid, password} = req.body;
-		console.log({uid})
 		// Find the user by uid
 		const user = await User.findOne({ uid });
 			if (!user) {
@@ -90,7 +107,7 @@ const authenticateOTP = async (req, res, next) => {
 		const {email, otp} = req.body;
 		const user = await User.findOne({email});
 		if(!user) return res.status(404).json({ msg: "No such user exists!" });
-		if(otp != user.otp.token) return res.status(401).json({ msg: "Incorrect OTP!" })
+		if(otp != user.otp.token) return res.status(401).json({ msg: "Sorry you can not hack into Inceptio! Incorrect OTP!" })
 		else if(!moment(Date.now()).isBefore(user.otp.expiresIn)) return res.status(401).json({msg: "OTP expired!"});
 		const payload = {
 			userId: user._id,
@@ -105,4 +122,4 @@ const authenticateOTP = async (req, res, next) => {
 	}
 }
 
-module.exports = {register, login, sendOTP, authenticateOTP};
+module.exports = {register, login, sendOTP, authenticateOTP, registerPanelist};

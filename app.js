@@ -1,26 +1,11 @@
 // require('dotenv').config();
 
-// const express = require('express');
-// const app = express();
-// const mongoose = require('mongoose');
-
-// const routes = require('./routes');
-// mongoose.connect(process.env.DB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
-//   .then( response => {
-//     console.log("Connected!");
-//   })
-//   .catch( err => console.log);
-  
-const express = require("express");
-const mongoose = require("mongoose");
+const express = require('express');
+const app = express();
+const mongoose = require('mongoose');
 const bodyParser = require("body-parser");
 
-const userRoutes = require("./routes/api/user");
-const projectRoutes = require("./routes/api/project");
-const biddingRoutes = require("./routes/api/bid");
-const emailRoutes = require("./routes/util/emailer");
-
-const app = express();
+const routes = require('./routes');
 
 // Middleware BodyParser
 app.use(
@@ -45,10 +30,7 @@ app.use((req, res, next) =>{
 });
 
 // Routes
-app.use("/api/user", userRoutes);
-app.use("/api/project", projectRoutes);
-app.use("/api/bid", biddingRoutes);
-app.use("/util/email", emailRoutes);
+app.use(routes);
 
 app.use((error, req, res, next) => {
   console.log(error);

@@ -10,21 +10,20 @@ const userSchema = new Schema({
     type: String
   },
   password: {
-    type: String,
-    required: true
+    type: String
   },
   balance: {
     type: Number,
     default: 100000 
   },
   email: {
-    type: String,
-    required: true
+    type: String
   },
   otp: {
     token: Number,
     expiresIn: Date
-  }
+  },
+  isAdmin: Boolean
 })
 
 module.exports = User = mongoose.model('users', userSchema);
